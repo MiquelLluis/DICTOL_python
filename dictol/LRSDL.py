@@ -278,6 +278,7 @@ def mini_test_unit():
     dataset = 'myYaleB'
     N_train = 5
     Y_train, Y_test, label_train, label_test = utils.train_test_split(dataset, N_train)
+    breakpoint()
     lrsdl = LRSDL(lambd=0.01, lambd2=0.01, eta=0.1, k=4, k0=5)
     lrsdl.fit(Y_train, label_train, iterations=30, verbose=True)
     lrsdl.evaluate(Y_test, label_test)

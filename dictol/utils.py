@@ -19,7 +19,7 @@ def vec(A):
     * Vectorization of a matrix. This function is a built-in function in some
     recent MATLAB version.
     """
-    return A.flatten(1)
+    return A.flatten()
 
 
 def label_to_range(label):
@@ -296,16 +296,17 @@ def load_mat(filename):
 
 def picl_train_test(dataset, N_train_c):
     data_fn = pkg_resources.resource_filename('dictol', 'data/'+dataset + '.mat') 
+    breakpoint()
     vars_dict = load_mat(data_fn)
     Y = vars_dict['Y']
     d = Y.shape[0]
     if 'Y_range' not in vars_dict:
-        Y_range = label_to_range(vars_dict['label'].flatten(1)).astype(int)
+        Y_range = label_to_range(vars_dict['label'].flatten()).astype(int)
 
     else:
-        Y_range = vars_dict['Y_range'].flatten(1).astype(int)
+        Y_range = vars_dict['Y_range'].flatten().astype(int)  # límits (index) de cada categoria (imatges contigues) dins Y.shape[1]
 
-    C = Y_range.size - 1
+    C = Y_range.size - 1  # numero de labels (categoríes)
     N_total     = Y_range[-1]
     N_train     = C*N_train_c
     N_test      = N_total - N_train
@@ -316,14 +317,14 @@ def picl_train_test(dataset, N_train_c):
     label_test = [0]*N_test
     cur_train   = 0
     cur_test    = 0
-    for c in range(C):
-        Yc        = get_block_col(Y, c, Y_range)
-        N_total_c = Yc.shape[1]
+    for c in range(C):  # Per cada label/categoría
+        Yc        = get_block_col(Y, c, Y_range)  # obté del total `Y` la categoría d'índex `c` mirant el rang d'index a `Y_range`
+        N_total_c = Yc.shape[1]  # quantitat de imatges
         N_test_c  = N_total_c - N_train_c
         label_train[cur_train: cur_train + N_train_c] = [c+1]*N_train_c
         label_test[cur_test:cur_test + N_test_c] = [c+1]*N_test_c
 
-        ids = randperm(N_total_c)
+        ids = randperm(N_total_c)  # per ordenar aleatoriament les imatges abans de separar train-test
 
         Y_train[:, cur_train: cur_train + N_train_c] = \
             Yc[:, np.sort(ids[:N_train_c])]
