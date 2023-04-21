@@ -104,6 +104,46 @@ class _UpdateXX0(optimize.Fista):
 
 
 class LRSDL(base.BaseModel):
+    """Low-Rank Shared Dictionary Learning
+
+    PARAMETERS
+    ----------
+    lambd: float
+        Regularization term:
+            lambd * ||X||_1
+        Makes the class-specific vector sparse, symilar to the LASSO
+        regularization term.
+
+    lambd2: float
+        Regularization term:
+            lambd2 / 2 * ||X⁰-M⁰||²
+        Makes the shared vector (selection of shared atoms) sparse and close to
+        the mean shared vector, i.e. all {X⁰} close between them.
+
+    eta: float
+        Regularization term:
+            eta * ||D⁰||_*
+        Enforces the shared dictionary to be low-rank.
+
+    k: int
+        Number of class-specific atoms for each class. The total number of
+        atoms in the class-specific dictionary is then `k * nc` where 'nc' is
+        the number of classes.
+    
+    k0: int
+        Total number of shared atoms. k0=0 is equivalent to the case when there
+        is no shared dictionary.
+    
+    updateX_iters, updateD_iters
+        *I think they are not used in this class at all.*
+
+
+    REFERENCE
+    ---------
+    Vu, T. H.; Monga, V. (2017). Fast low-rank shared dictionary learning for image classification.
+    IEEE Transactions on Image Processing, 26(11), 5160–5175. https://doi.org/10.1109/TIP.2017.2729885
+
+    """
     def __init__(self, lambd=0.01, lambd2=0.01, eta=0.0001,
             k=10, k0=5, updateX_iters=100, updateD_iters=100):
         self.lambd = lambd
