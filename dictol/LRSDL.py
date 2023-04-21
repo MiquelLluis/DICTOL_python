@@ -166,6 +166,35 @@ class LRSDL(base.BaseModel):
         return get_block_col(self.Y, c, self.Y_range)
 
     def fit(self, Y, train_label, verbose=False, iterations=100, show_after=5):
+        """Train the LRSDL dictionary.
+
+        PARAMETERS
+        ----------
+        Y: 2d-array, shape = (n-features, n-samples)
+            Train set shaped in Fortran notation, where the first axis are the
+            features (bins of the strain) and the second axis are the samples
+            (number of strains).
+            Despite being in Fortran notation it seems it is not optimized,
+            arrays in this class are stored in memory in C-order. Either they
+            are reshaped internally when updating the dictionary, or the
+            performance can be heavily increased by re-mapping them.
+
+        train_label: array-like
+            Label of each strain in Y.
+            Must accomply `len(train_label) == Y.shape[1]`.
+
+        verbose: bool
+            If True prints progression every 'show_after' iterations.
+
+        iterations: int
+            Actual number of times the dictionary is updated over all the 'Y'
+            dataset.
+
+        show_after: int
+            If verbose is True, number of iterations to skip printing the
+            progression of the training.
+
+        """
         self.Y_range = utils.label_to_range(train_label)
         self.num_classes = len(self.Y_range) - 1
         self.D_range = [self.k*i for i in range(self.num_classes+1)]
