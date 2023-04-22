@@ -323,7 +323,7 @@ class LRSDL(base.BaseModel):
                 + self.eta*nuclearnorm(self.D0)
         return cost
 
-    def predict(self, Y):
+    def predict(self, Y, loss_mat=False):
         N = Y.shape[1]
         E = np.zeros((self.num_classes, N))
         for c in range(self.num_classes):
@@ -338,7 +338,7 @@ class LRSDL(base.BaseModel):
             E[c, :] = 0.5*np.sum(residual_matrix*residual_matrix, axis=0) +\
                 self.lambd*np.sum(np.abs(Xc), axis=0)
         pred = np.argmin(E, axis=0) + 1
-        return pred
+        return (pred, E) if loss_mat else pred
 
 
 def mini_test_unit():
