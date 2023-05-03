@@ -106,6 +106,10 @@ class _UpdateXX0(optimize.Fista):
 class LRSDL(base.BaseModel):
     """Low-Rank Shared Dictionary Learning
 
+    WARNING: They didn't provide a seed parameter for the random initialization
+    of the dictionary. If reproducibility is important, one must set the global
+    numpy's seed before callint LRSDL.__init__().
+
     PARAMETERS
     ----------
     lambd: float
