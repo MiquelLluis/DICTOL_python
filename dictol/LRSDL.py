@@ -344,6 +344,10 @@ class LRSDL(base.BaseModel):
         pred = np.argmin(E, axis=0) + 1
         return (pred, E) if loss_mat else pred
 
+    def save(self, file):
+        vars_ = vars(self)
+        np.savez(file, **vars_)
+
 
 def mini_test_unit():
     print('\n================================================================')
