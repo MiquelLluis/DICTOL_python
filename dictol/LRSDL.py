@@ -133,6 +133,8 @@ class LRSDL(base.BaseModel):
         Number of class-specific atoms for each class. The total number of
         atoms in the class-specific dictionary is then `k * nc` where 'nc' is
         the number of classes.
+        NOTE: There can be weird indexing errors depending on the number of
+        training signals while fitting and the parity of 'k'. Play around...
     
     k0: int
         Total number of shared atoms. k0=0 is equivalent to the case when there
@@ -171,6 +173,9 @@ class LRSDL(base.BaseModel):
 
     def fit(self, Y, train_label, verbose=False, iterations=100, show_after=5):
         """Train the LRSDL dictionary.
+
+        NOTE: There can be weird indexing errors depending on the number of
+        training signals while fitting and the parity of 'k'. Play around...
 
         PARAMETERS
         ----------
