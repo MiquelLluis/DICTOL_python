@@ -5,7 +5,8 @@ from time import strftime
 import numpy as np
 import numpy.linalg as LA
 import scipy.io as sio
-import pkg_resources
+# import pkg_resources  # DEPRECATED
+from importlib import resources  # CURRENT APPROACH
 
 
 def repmat(A, rows, cols):
@@ -295,9 +296,13 @@ def load_mat(filename):
 
 
 def picl_train_test(dataset, N_train_c):
-    data_fn = pkg_resources.resource_filename('dictol', 'data/'+dataset + '.mat') 
-    breakpoint()
-    vars_dict = load_mat(data_fn)
+    # data_fn = pkg_resources.resource_filename('dictol', 'data/'+dataset + '.mat') 
+    # breakpoint()
+    # vars_dict = load_mat(data_fn)
+    resource = resources.files("dictol") / "data" / f"{dataset}.mat"
+    with resources.as_file(resource) as path:
+        vars_dict = sio.loadmat(str(path))
+
     Y = vars_dict['Y']
     d = Y.shape[0]
     if 'Y_range' not in vars_dict:
@@ -366,9 +371,13 @@ def build_mean_vector(X, Y_range):
 
 def train_test_split(dataset, N_train):
     if dataset == 'myARgender':
-        fn = pkg_resources.resource_filename('dictol', 'data/'+dataset + '.mat') 
-        # fn = os.path.join('data', 'myARgender.pickle')
-        vars_dict = load_mat(fn)
+        # fn = pkg_resources.resource_filename('dictol', 'data/'+dataset + '.mat') 
+        # # fn = os.path.join('data', 'myARgender.pickle')
+        # vars_dict = load_mat(fn)
+        resource = resources.files("dictol") / "data" / f"{dataset}.mat"
+        with resources.as_file(resource) as path:
+            vars_dict = sio.loadmat(str(path))
+
         Y_train = vars_dict['Y_train']
         Y_test = vars_dict['Y_test']
         label_train = vec(vars_dict['label_train']).astype(int)
